@@ -18,6 +18,16 @@ class Node{
 
 };
 
+class listNode{
+    public:
+        char ch;
+        listNode* next;
+        listNode(char ch){
+            this->ch = ch;
+            next = NULL;
+        }
+};
+
 class AVL{
     public:
         Node* root;
@@ -144,6 +154,45 @@ class AVL{
 
 };
 
+class List{
+    public:
+        listNode* head;
+        listNode* tail;
+        List(){
+            head = NULL;
+        }
+
+        void insert(char ch){
+            if(head == NULL){
+                head = new listNode(ch);
+                tail = head;
+            }
+            else{
+                tail->next = new listNode(ch);
+                tail = tail->next;
+            }
+        }
+
+        void display(){
+            listNode* temp = head;
+            while(temp != NULL){
+                cout << temp->ch ;
+                temp = temp->next;
+            }
+            cout << endl;
+        }
+
+        void deleteList(){
+            listNode* temp = head;
+            while(temp != NULL){
+                listNode* temp1 = temp;
+                temp = temp->next;
+                delete temp1;
+            }
+        }
+
+};
+
 
 int main(){
     AVL tree;
@@ -156,6 +205,15 @@ int main(){
     file.close();
     cout << "TREE CONSTRUCTED SUCCESSFULLY" << endl;
 
-    cout << "PreOrder Traversal of AVL Tree: " << endl;
-    tree.preOrder();
+    List list;
+    file.open("dictionary.txt");
+    while(file >> word){
+        for(int i = 0; i < word.length(); i++){
+            list.insert(word[i]);
+        }
+        list.insert(' ');
+    }
+    file.close();
+    cout << "LIST CONSTRUCTED SUCCESSFULLY" << endl;
+    list.display();
 }
