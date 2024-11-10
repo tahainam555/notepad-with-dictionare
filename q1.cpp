@@ -1,5 +1,7 @@
 #include<iostream>
 #include<fstream>
+#include<windows.h>
+#include<conio.h>
 using namespace std;
 
 class Node{
@@ -26,6 +28,71 @@ class listNode{
             this->ch = ch;
             next = NULL;
         }
+};
+
+class queueNode{
+    public:
+        char data;
+        queueNode* next;
+        queueNode(char data){
+            this->data = data;
+            next = NULL;
+        }
+};
+
+class Queue{
+    public:
+        queueNode* head;
+        queueNode* tail;
+        Queue(){
+            head = NULL;
+            tail = NULL;
+        }
+
+        void enqueue(char data){
+            if(head == NULL){
+                head = new queueNode(data);
+                tail = head;
+            }
+            else{
+                tail->next = new queueNode(data);
+                tail = tail->next;
+            }
+        }
+
+        char dequeue(){
+            if(head == NULL){
+                return '\0';
+            }
+            queueNode* temp = head;
+            head = head->next;
+            char data = temp->data;
+            delete temp;
+            return data;
+        }
+
+        bool isEmpty(){
+            return head == NULL;
+        }
+
+        void display(){
+            queueNode* temp = head;
+            while(temp != NULL){
+                cout << temp->data << " ";
+                temp = temp->next;
+            }
+            cout << endl;
+        }
+
+        void deleteQueue(){
+            queueNode* temp = head;
+            while(temp != NULL){
+                queueNode* temp1 = temp;
+                temp = temp->next;
+                delete temp1;
+            }
+        }
+
 };
 
 class AVL{
@@ -200,12 +267,15 @@ int main(){
     file.open("dictionary.txt");
     string word;
     while(file >> word){
+//        if(word[0]<=90 && word[0]>=65){
+//            word[0] = word[0] + 32;
+//        }
         tree.insert(word);
     }
     file.close();
     cout << "TREE CONSTRUCTED SUCCESSFULLY" << endl;
 
-    List list;
+/*
     file.open("dictionary.txt");
     while(file >> word){
         for(int i = 0; i < word.length(); i++){
@@ -215,5 +285,41 @@ int main(){
     }
     file.close();
     cout << "LIST CONSTRUCTED SUCCESSFULLY" << endl;
+*/    
+    List list;
+    char ch;
+    string str = "";
+    while(1){
+        ch = getch();
+        if(ch == 27){
+            break;
+        }
+        else if(ch == 32){
+            Node* temp = tree.search(str);
+            if(temp != NULL){
+                cout << "FOUND" << endl;
+            }
+            else{
+                cout << "NOT FOUND" << endl;
+            }
+            str = "";
+        }
+        else if(ch == 19){
+            //SAVE IN FILE
+        }
+        else if(ch == 12){
+            //LOAD FROM FILE
+        }
+        else if(ch == 8){
+            //BACKSPACE    
+        }
+        else{
+            str += ch;
+            list.insert(ch);
+        }
+    }
     list.display();
+    cout << "LIST CONSTRUCTED SUCCESSFULLY" << endl;
+
+
 }
