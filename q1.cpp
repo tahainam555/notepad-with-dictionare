@@ -2,6 +2,7 @@
 #include<fstream>
 #include<windows.h>
 #include<conio.h>
+#include<cstdlib>
 using namespace std;
 
 class Node{
@@ -249,6 +250,19 @@ class List{
             cout << endl;
         }
 
+        void deleteNode(){
+            if(head == NULL){
+                return;
+            }
+            tail = head;
+            while(tail->next->next != NULL){
+                tail = tail->next;
+            }
+            listNode* temp = tail->next;
+            tail->next = NULL;
+            delete temp;
+        }
+
         void deleteList(){
             listNode* temp = head;
             while(temp != NULL){
@@ -260,8 +274,12 @@ class List{
 
 };
 
+void clearScreen(){
+    system("cls");
+}
 
 int main(){
+    clearScreen();
     AVL tree;
     fstream file;
     file.open("dictionary.txt");
@@ -287,38 +305,59 @@ int main(){
     cout << "LIST CONSTRUCTED SUCCESSFULLY" << endl;
 */    
     List list;
+    Queue queue;
     char ch;
     string str = "";
     while(1){
         ch = getch();
         if(ch == 27){
+            list.deleteList();
+            queue.deleteQueue();
+            tree.deleteTree();
             break;
         }
         else if(ch == 32){
+            //SPACE
+            while(!queue.isEmpty()){
+                str += queue.dequeue();
+            }
             Node* temp = tree.search(str);
-            if(temp != NULL){
-                cout << "FOUND" << endl;
-            }
-            else{
-                cout << "NOT FOUND" << endl;
-            }
-            str = "";
+
         }
         else if(ch == 19){
-            //SAVE IN FILE
+            //Ctrl + S
+            fstream file;
+            file.open("output.txt", ios::app);
+            listNode* temp = list.head;
+            while(temp != NULL){
+                file << temp->ch;
+                temp = temp->next;
+            }
+            file << endl;
+            file.close();
         }
         else if(ch == 12){
             //LOAD FROM FILE
+            list.deleteList();
+            fstream file;
+            file.open("output.txt");
+            char ch;
+            while(file >> ch){
+                list.insert(ch);
+            }
+            file.close();
         }
         else if(ch == 8){
-            //BACKSPACE    
+            //BACKSPACE  
+            list.deleteNode();  
         }
         else{
-            str += ch;
             list.insert(ch);
+            queue.enqueue(ch);
         }
+        clearScreen();
+        list.display();
     }
-    list.display();
     cout << "LIST CONSTRUCTED SUCCESSFULLY" << endl;
 
 
