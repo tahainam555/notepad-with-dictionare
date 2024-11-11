@@ -77,6 +77,12 @@ class Queue{
             if(head == NULL){
                 return;
             }
+            if(head->next == NULL){
+                delete head;
+                head = NULL;
+                tail = NULL;
+                return;
+            }
             queueNode* temp = head;
             while(temp->next->next != NULL){
                 temp = temp->next;
@@ -269,6 +275,12 @@ class List{
             if(head == NULL){
                 return;
             }
+            if(head->next == NULL){
+                delete head;
+                head = NULL;
+                tail = NULL;
+                return;
+            }
             tail = head;
             while(tail->next->next != NULL){
                 tail = tail->next;
@@ -287,6 +299,9 @@ class List{
             }
         }
 
+        bool isEmpty(){
+            return head == NULL;
+        }
 };
 
 void clearScreen(){
@@ -429,8 +444,7 @@ int main(){
             list.insert(' ');
             str="";
         }
-        else if(ch == 19){
-            //Ctrl + S
+        else if(ch == 19){                  //Ctrl + S
             fstream file;
             file.open("output.txt", ios::out);
             file << "";
@@ -444,8 +458,7 @@ int main(){
             file << endl;
             file.close();
         }
-        else if(ch == 12){
-            //LOAD FROM FILE
+        else if(ch == 12){                  //Ctrl + L
             list.deleteList();
             fstream file;
             file.open("output.txt");
@@ -458,9 +471,9 @@ int main(){
             }
             file.close();
         }
-        else if(ch == 8){
-            //BACKSPACE  
-            list.deleteNode();  
+        else if(ch == 8){                   //BACKSPACE
+            if(!list.isEmpty())
+                list.deleteNode();  
             if(!queue.isEmpty())
                 queue.removeLast();
         }
@@ -472,6 +485,4 @@ int main(){
         list.display();
     }
     cout << "LIST CONSTRUCTED SUCCESSFULLY" << endl;
-
-
 }
