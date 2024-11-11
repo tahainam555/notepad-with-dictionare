@@ -293,6 +293,79 @@ void clearScreen(){
     system("cls");
 }
 
+string letterSubstitution(AVL tree, string str){
+    string temp = str;
+    for(int i = 0; i < str.length(); i++){
+        for(int j = 0; j < 26; j++){
+            temp[i] = 'a' + j;
+            if(tree.search(temp) != NULL){
+                return temp;
+            }
+        }
+        temp = str;
+    }
+    return "NOT FOUND";
+}
+
+string letterOmmission(AVL tree, string str){
+    string temp = str;
+    string temp1 = "";
+    for(int i = 0; i < str.length(); i++){
+        temp1 = "";
+        for(int j = 0; j < str.length(); j++){
+            if(j != i){
+                temp1 += str[j];
+            }
+        }
+        if(tree.search(temp1) != NULL){
+            return temp1;
+        }
+    }
+    return "NOT FOUND";
+}
+
+string letterInsertion(AVL tree, string str){
+    string temp = str;
+    string temp1 = "";
+    for(int i = 0; i <= str.length(); i++){
+        for(int j = 0; j < 26; j++){
+            temp1 = "";
+            for(int k = 0; k < str.length(); k++){
+                if(k == i){
+                    temp1 += 'a' + j;
+                }
+                temp1 += str[k];
+            }
+            if(tree.search(temp1) != NULL){
+                return temp1;
+            }
+        }
+    }
+    return "NOT FOUND";
+}
+
+string letterReversal(AVL tree, string str){
+    string temp = str;
+    string temp1 = "";
+    for(int i = 0; i < str.length()-1; i++){
+        temp1 = "";
+        for(int j = 0; j < str.length(); j++){
+            if(j == i){
+                temp1 += str[j+1];
+                temp1 += str[j];
+                j++;
+            }
+            else{
+                temp1 += str[j];
+            }
+        }
+        if(tree.search(temp1) != NULL){
+            return temp1;
+        }
+    }
+    return "NOT FOUND";
+}
+
 int main(){
     clearScreen();
     AVL tree;
@@ -339,7 +412,20 @@ int main(){
 //            cout << endl << str << endl;
 //            getch();
             Node* temp = tree.search(str);
-
+            if(temp == NULL){
+                string correct = letterSubstitution(tree, str);
+                cout << endl <<  correct << "\t\t" ;
+                correct = "";
+                correct = letterOmmission(tree, str);
+                cout << correct << "\t\t";
+                correct = "";
+                correct = letterInsertion(tree, str);
+                cout << correct << "\t\t";
+                correct = "";
+                correct = letterReversal(tree, str);
+                cout << correct << endl;
+                getch();
+            }
             list.insert(' ');
             str="";
         }
@@ -375,7 +461,8 @@ int main(){
         else if(ch == 8){
             //BACKSPACE  
             list.deleteNode();  
-            queue.removeLast();
+            if(!queue.isEmpty())
+                queue.removeLast();
         }
         else{
             list.insert(ch);
