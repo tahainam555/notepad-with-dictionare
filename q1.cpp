@@ -3,6 +3,7 @@
 #include<windows.h>
 #include<conio.h>
 #include<cstdlib>
+#include<string>
 using namespace std;
 
 class Node{
@@ -70,6 +71,20 @@ class Queue{
             char data = temp->data;
             delete temp;
             return data;
+        }
+
+        void removeLast(){
+            if(head == NULL){
+                return;
+            }
+            queueNode* temp = head;
+            while(temp->next->next != NULL){
+                temp = temp->next;
+            }
+            queueNode* temp1 = temp->next;
+            tail = temp;
+            temp->next = NULL;
+            delete temp1;
         }
 
         bool isEmpty(){
@@ -321,12 +336,19 @@ int main(){
             while(!queue.isEmpty()){
                 str += queue.dequeue();
             }
+//            cout << endl << str << endl;
+//            getch();
             Node* temp = tree.search(str);
 
+            list.insert(' ');
+            str="";
         }
         else if(ch == 19){
             //Ctrl + S
             fstream file;
+            file.open("output.txt", ios::out);
+            file << "";
+            file.close();
             file.open("output.txt", ios::app);
             listNode* temp = list.head;
             while(temp != NULL){
@@ -341,15 +363,19 @@ int main(){
             list.deleteList();
             fstream file;
             file.open("output.txt");
-            char ch;
-            while(file >> ch){
-                list.insert(ch);
+            string str;
+            while(getline(file, str)){
+                for(int i = 0; i < str.length(); i++){
+                    list.insert(str[i]);
+                }
+                list.insert(' ');
             }
             file.close();
         }
         else if(ch == 8){
             //BACKSPACE  
             list.deleteNode();  
+            queue.removeLast();
         }
         else{
             list.insert(ch);
