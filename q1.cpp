@@ -26,9 +26,11 @@ class listNode{
     public:
         char ch;
         listNode* next;
+        listNode* prev;
         listNode(char ch){
             this->ch = ch;
             next = NULL;
+            prev = NULL;
         }
 };
 
@@ -258,6 +260,7 @@ class List{
             }
             else{
                 tail->next = new listNode(ch);
+                tail->next->prev = tail;
                 tail = tail->next;
             }
         }
@@ -275,21 +278,27 @@ class List{
             if(head == NULL){
                 return;
             }
-            if(head->next == NULL){
+            else if(tail == NULL){
+                return;
+            }
+            else if(head->next == NULL){
                 delete head;
                 head = NULL;
                 tail = NULL;
                 return;
             }
-            tail = head;
-            while(tail->next->next != NULL){
-                tail = tail->next;
+            else{    
+                listNode* temp = tail;
+                tail = tail->prev;
+                if(tail != NULL){
+                    tail->next = NULL;
+                } 
+                else{
+                    head = NULL;
+                }
+                delete temp;
             }
-            listNode* temp = tail->next;
-            tail->next = NULL;
-            delete temp;
         }
-
         void deleteList(){
             listNode* temp = head;
             while(temp != NULL){
@@ -319,7 +328,7 @@ string letterSubstitution(AVL tree, string str){
         }
         temp = str;
     }
-    return "NOT FOUND";
+    return "\0";
 }
 
 string letterOmmission(AVL tree, string str){
@@ -336,7 +345,7 @@ string letterOmmission(AVL tree, string str){
             return temp1;
         }
     }
-    return "NOT FOUND";
+    return "\0";
 }
 
 string letterInsertion(AVL tree, string str){
@@ -356,7 +365,7 @@ string letterInsertion(AVL tree, string str){
             }
         }
     }
-    return "NOT FOUND";
+    return "\0";
 }
 
 string letterReversal(AVL tree, string str){
@@ -378,7 +387,7 @@ string letterReversal(AVL tree, string str){
             return temp1;
         }
     }
-    return "NOT FOUND";
+    return "\0";
 }
 
 int main(){
@@ -394,7 +403,7 @@ int main(){
         tree.insert(word);
     }
     file.close();
-    cout << "TREE CONSTRUCTED SUCCESSFULLY" << endl;
+//    cout << "TREE CONSTRUCTED SUCCESSFULLY" << endl;
 
 /*
     file.open("dictionary.txt");
@@ -428,18 +437,47 @@ int main(){
 //            getch();
             Node* temp = tree.search(str);
             if(temp == NULL){
-                string correct = letterSubstitution(tree, str);
-                cout << endl <<  correct << "\t\t" ;
-                correct = "";
-                correct = letterOmmission(tree, str);
-                cout << correct << "\t\t";
-                correct = "";
-                correct = letterInsertion(tree, str);
-                cout << correct << "\t\t";
-                correct = "";
-                correct = letterReversal(tree, str);
-                cout << correct << endl;
-                getch();
+                string correct1 = letterSubstitution(tree, str);
+                cout << endl <<  correct1 << "\t\t" ;
+                string correct2 = letterOmmission(tree, str);
+                cout << correct2 << "\t\t";
+                string correct3 = letterInsertion(tree, str);
+                cout << correct3 << "\t\t";
+                string correct4 = letterReversal(tree, str);
+                cout << correct4 << endl;
+                char choice = getch();
+                if(choice == '1'){
+                    while(list.tail != NULL && list.tail->ch != ' ' && list.isEmpty()==false){
+                        list.deleteNode();
+                    }
+                    for(int i = 0; i < correct1.length(); i++){
+                        list.insert(correct1[i]);
+                    }
+                }
+                else if(choice == '2'){
+                    while(list.tail != NULL && list.tail->ch != ' ' && !list.isEmpty()){
+                        list.deleteNode();
+                    }
+                    for(int i = 0; i < correct2.length(); i++){
+                        list.insert(correct2[i]);
+                    }
+                }
+                else if(choice == '3'){
+                    while(list.tail != NULL && list.tail->ch != ' ' && !list.isEmpty()){
+                        list.deleteNode();
+                    }
+                    for(int i = 0; i < correct3.length(); i++){
+                        list.insert(correct3[i]);
+                    }
+                }
+                else if(choice == '4'){
+                    while(list.tail != NULL && list.tail->ch != ' ' && !list.isEmpty()){
+                        list.deleteNode();
+                    }
+                    for(int i = 0; i < correct4.length(); i++){
+                        list.insert(correct4[i]);
+                    }
+                }
             }
             list.insert(' ');
             str="";
@@ -472,10 +510,28 @@ int main(){
             file.close();
         }
         else if(ch == 8){                   //BACKSPACE
-            if(!list.isEmpty())
-                list.deleteNode();  
-            if(!queue.isEmpty())
-                queue.removeLast();
+            if(list.tail->ch == ' '){
+                list.deleteNode();
+                clearScreen();
+                list.display();
+                listNode* temp = list.tail;
+                while(temp->ch != ' ' && temp != list.head){
+                    temp = temp->prev;
+                }
+                if(temp->ch == ' '){
+                    temp = temp->next;
+                }
+                while(temp != NULL){
+                    queue.enqueue(temp->ch);
+                    temp = temp->next;
+                }
+            }
+            else{
+                if(!list.isEmpty())
+                    list.deleteNode();  
+                if(!queue.isEmpty())
+                    queue.removeLast();
+            }
         }
         else{
             list.insert(ch);
@@ -484,5 +540,4 @@ int main(){
         clearScreen();
         list.display();
     }
-    cout << "LIST CONSTRUCTED SUCCESSFULLY" << endl;
 }
