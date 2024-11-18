@@ -1,3 +1,5 @@
+//          COPYEIGHT 2571 2024
+
 #include<iostream>
 #include<fstream>
 #include<windows.h>
